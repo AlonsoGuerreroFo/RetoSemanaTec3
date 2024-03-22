@@ -11,7 +11,7 @@ Exercises
 
 from random import choice
 from turtle import *
-
+from math import sqrt
 from freegames import floor, vector
 
 state = {'score': 0}
@@ -131,18 +131,13 @@ def move():
     dot(20, 'yellow')
 
     for point, course in ghosts:
-        if valid(point + course):
-            point.move(course)
+        options = [vector(5, 0), vector(-5, 0), vector(0, 5), vector(0, -5)]
+        options.sort(key=lambda option: sqrt((point.x + option.x - pacman.x)**2 + (point.y + option.y - pacman.y)**2))
+        best_option = options[0]
+        if valid(point + best_option):
+            point.move(best_option)
         else:
-            options = [
-                vector(5, 0),
-                vector(-5, 0),
-                vector(0, 5),
-                vector(0, -5),
-            ]
-            plan = choice(options)
-            course.x = plan.x
-            course.y = plan.y
+            point.move(choice(options))
 
         up()
         goto(point.x + 10, point.y + 10)
